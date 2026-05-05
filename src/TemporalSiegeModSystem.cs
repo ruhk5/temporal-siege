@@ -1,16 +1,25 @@
 using TemporalSiege.Config;
+using TemporalSiege.Damage;
 using Vintagestory.API.Common;
+using Vintagestory.API.Server;
 
 namespace TemporalSiege;
 
 public class TemporalSiegeModSystem : ModSystem
 {
     public TemporalSiegeConfig Config { get; private set; } = new();
+    public BlockDamageStore? BlockDamage { get; private set; }
 
     public override void Start(ICoreAPI api)
     {
         api.Logger.Notification("[TemporalSiege] mod loaded ({0} side)", api.Side);
         Config = ConfigLoader.Load(api);
+    }
+
+    public override void StartServerSide(ICoreServerAPI sapi)
+    {
+        BlockDamage = new BlockDamageStore(sapi);
+        BlockDamageDebugCommands.Register(sapi, BlockDamage);
     }
 
     public override void AssetsFinalize(ICoreAPI api)
