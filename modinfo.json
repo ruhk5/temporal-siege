@@ -1,0 +1,12 @@
+{
+  "type": "code",
+  "modid": "voxelengine",
+  "name": "Voxel Engine: Horde Nights",
+  "authors": ["ruhk5"],
+  "description": "Adds a horde-night loop on top of Vintage Story's temporal storms. Visible rifts, weakest-path AI, base-defense progression.",
+  "version": "0.1.0",
+  "side": "universal",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}
