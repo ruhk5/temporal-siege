@@ -1,0 +1,30 @@
+{
+  "rifts": {
+    "minRiftsPerStorm": 3,
+    "maxRiftsPerStorm": 5,
+    "minRingRadius": 30,
+    "maxRingRadius": 50,
+    "minAirBlocksAbove": 3,
+    "freshRiftsPerLullMin": 1,
+    "freshRiftsPerLullMax": 2,
+    "riftHp": 600,
+    "stormEndLootLifetimeGameHours": 24
+  },
+  "beacon": {
+    "proximityRadiusBlocks": 50,
+    "lockInWindowGameHours": 1,
+    "minAirBlocksAbove": 3,
+    "beaconHp": 1200
+  },
+  "storm": {
+    "intensityMetric": "tool_material",
+    "minorThreshold": 0,
+    "moderateThreshold": 3,
+    "majorThreshold": 6,
+    "stragglerDespawnDistanceBlocks": 100,
+    "stragglerPhaseMinutes": 5
+  },
+  "waves": {
+    "maxConcurrentMobs": 22
+  }
+}
