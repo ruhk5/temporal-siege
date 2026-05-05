@@ -7,6 +7,6 @@
   "version": "0.1.0",
   "side": "universal",
   "dependencies": {
-    "game": "1.22.0"
+    "game": "1.22.0-rc.2"
   }
 }
