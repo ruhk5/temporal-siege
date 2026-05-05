@@ -1,0 +1,10 @@
+{
+  "code": "temporalshard",
+  "class": "Item",
+  "maxstacksize": 64,
+  "shape": { "base": "game:item/standardflat" },
+  "textures": {
+    "all": { "base": "temporalsiege:item/temporalshard" }
+  },
+  "creativeinventory": { "general": ["*"] }
+}

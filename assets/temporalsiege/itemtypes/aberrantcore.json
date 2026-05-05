@@ -1,0 +1,10 @@
+{
+  "code": "aberrantcore",
+  "class": "Item",
+  "maxstacksize": 16,
+  "shape": { "base": "game:item/standardflat" },
+  "textures": {
+    "all": { "base": "temporalsiege:item/aberrantcore" }
+  },
+  "creativeinventory": { "general": ["*"] }
+}
