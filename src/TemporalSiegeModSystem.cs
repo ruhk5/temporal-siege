@@ -1,7 +1,9 @@
+using TemporalSiege.AI;
 using TemporalSiege.Config;
 using TemporalSiege.Damage;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
+using Vintagestory.GameContent;
 
 namespace TemporalSiege;
 
@@ -20,6 +22,9 @@ public class TemporalSiegeModSystem : ModSystem
     {
         BlockDamage = new BlockDamageStore(sapi);
         BlockDamageDebugCommands.Register(sapi, BlockDamage);
+
+        // AI behavior library (ADR-0005). AI runs server-side only in v1.
+        AiTaskRegistry.Register<AiTaskTargetNearestPlayer>("temporalsiege:targetnearestplayer");
     }
 
     public override void AssetsFinalize(ICoreAPI api)

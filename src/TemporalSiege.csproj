@@ -36,6 +36,10 @@
       <HintPath>$(VintageStoryDir)\Vintagestory.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="VSEssentials">
+      <HintPath>$(VintageStoryDir)\Mods\VSEssentials.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(VintageStoryDir)\Lib\Newtonsoft.Json.dll</HintPath>
       <Private>false</Private>
