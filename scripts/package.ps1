@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Build the mod in Release and produce a distributable zip at dist/voxelengine-<version>.zip.
+  Build the mod in Release and produce a distributable zip at dist/temporalsiege-<version>.zip.
 #>
 [CmdletBinding()]
 param()
@@ -8,14 +8,15 @@ param()
 $ErrorActionPreference = 'Stop'
 
 $repoRoot   = Resolve-Path (Join-Path $PSScriptRoot '..')
-$csproj     = Join-Path $repoRoot 'src\VoxelEngine.csproj'
-$stagingDir = Join-Path $repoRoot 'dist\dev\voxelengine'
+$csproj     = Join-Path $repoRoot 'src\TemporalSiege.csproj'
+$stagingDir = Join-Path $repoRoot 'dist\dev\temporalsiege'
 $distDir    = Join-Path $repoRoot 'dist'
 
-# Pull the version out of modinfo.json so the zip name tracks releases.
+# Pull modid + version out of modinfo.json so the zip name tracks releases.
 $modinfo = Get-Content (Join-Path $repoRoot 'modinfo.json') -Raw | ConvertFrom-Json
+$modid   = $modinfo.modid
 $version = $modinfo.version
-$zipPath = Join-Path $distDir ("voxelengine-{0}.zip" -f $version)
+$zipPath = Join-Path $distDir ("{0}-{1}.zip" -f $modid, $version)
 
 Write-Host "[package] Building $csproj (Release)..."
 & dotnet build $csproj -c Release --nologo

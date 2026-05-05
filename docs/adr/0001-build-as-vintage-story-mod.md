@@ -5,7 +5,7 @@
 
 ## Context
 
-The original concept could be interpreted three ways: (A) a Vintage Story mod, (B) a from-scratch C# engine deliberately mimicking VS's API surface, or (C) a from-scratch VS-inspired voxel game with an original engine and original mod API. The repo is named `voxel-engine`, which suggests temptation toward (B) or (C).
+The original concept could be interpreted three ways: (A) a Vintage Story mod, (B) a from-scratch C# engine deliberately mimicking VS's API surface, or (C) a from-scratch VS-inspired voxel game with an original engine and original mod API. The repo was originally named `voxel-engine`, which suggested temptation toward (B) or (C); it has since been renamed `temporal-siege` to match the mod's actual scope.
 
 (B) and (C) are multi-year solo projects that compete with VS's 10+ years of accumulated engine work. (B) additionally carries legal-grey-area risk if VS's public API surface is mirrored too closely. The actual design innovation in this concept is the *gameplay loop* (horde nights bolted onto VS-style survival craft), not the *engine*.
 

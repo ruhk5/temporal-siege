@@ -3,8 +3,8 @@
   Build the mod and link the dev staging directory into the VS Mods folder.
 
 .DESCRIPTION
-  Builds src/VoxelEngine.csproj which stages the mod at dist/dev/voxelengine/.
-  Then creates a junction at %APPDATA%\VintagestoryData\Mods\voxelengine pointing
+  Builds src/TemporalSiege.csproj which stages the mod at dist/dev/temporalsiege/.
+  Then creates a junction at %APPDATA%\VintagestoryData\Mods\temporalsiege pointing
   at the staging dir, so subsequent rebuilds are picked up by VS automatically.
 
   Junctions don't require admin elevation on Windows.
@@ -20,10 +20,10 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repoRoot     = Resolve-Path (Join-Path $PSScriptRoot '..')
-$csproj       = Join-Path $repoRoot 'src\VoxelEngine.csproj'
-$stagingDir   = Join-Path $repoRoot 'dist\dev\voxelengine'
+$csproj       = Join-Path $repoRoot 'src\TemporalSiege.csproj'
+$stagingDir   = Join-Path $repoRoot 'dist\dev\temporalsiege'
 $modsDir      = Join-Path $env:APPDATA 'VintagestoryData\Mods'
-$modLink      = Join-Path $modsDir 'voxelengine'
+$modLink      = Join-Path $modsDir 'temporalsiege'
 
 Write-Host "[dev-install] Building $csproj ($Configuration)..."
 & dotnet build $csproj -c $Configuration --nologo
@@ -52,4 +52,4 @@ Write-Host "[dev-install] Linking $modLink -> $stagingDir"
 cmd /c "mklink /J `"$modLink`" `"$stagingDir`"" | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "mklink failed (exit $LASTEXITCODE)" }
 
-Write-Host "[dev-install] Done. Launch Vintage Story; mod should appear as 'Voxel Engine: Horde Nights'."
+Write-Host "[dev-install] Done. Launch Vintage Story; mod should appear as 'Temporal Siege'."

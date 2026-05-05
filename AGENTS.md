@@ -2,7 +2,7 @@
 
 ### Issue tracker
 
-Issues live in GitHub Issues at `ruhk5/voxel-engine`, accessed via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues live in GitHub Issues at `ruhk5/temporal-siege`, accessed via the `gh` CLI. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

@@ -4,12 +4,12 @@
 
 A Vintage Story (VS) mod that adds a 7 Days to Die-style horde-night loop on top of VS's survival craft gameplay. Players play vanilla VS — knapping, smelting, basebuilding — but every ~9–13 in-game days the world's native temporal storms become active sieges: visible rifts open around a player-placed beacon, waves of corrupted entities spawn from them and converge on the players' position, breaking through walls along the weakest path. Players must repair, restock, and prepare between storms.
 
-The repo is named `voxel-engine` for historical reasons. The project is a mod, not a from-scratch engine. See ADR-0001.
+The mod ships under the modid `temporalsiege` (repo: `temporal-siege`). The project is a mod, not a from-scratch engine. See ADR-0001.
 
 ## Project shape
 
 - **Vintage Story mod**, loaded into VS via the standard mod system. (ADR-0001)
-- **Target**: VS 1.20.x latest only. Standalone — no third-party mod dependencies. Compatible with existing worlds (additive — drop the zip into `Mods/`, the next temporal storm is the no-beacon tutorial).
+- **Target**: VS 1.22.x latest only. Standalone — no third-party mod dependencies. Compatible with existing worlds (additive — drop the zip into `Mods/`, the next temporal storm is the no-beacon tutorial).
 - **Players**: small co-op (1–4 players, host-and-play). Solo falls out as a special case.
 - **Realistic v1 timeline (estimate)**: 6–9 months of focused solo work.
 
@@ -180,7 +180,7 @@ The mod's defensive tech tree is *parallel to* vanilla VS progression. Players w
 
 ## Compatibility
 
-- VS 1.20.x latest only. New VS major versions = new mod branch, not runtime compat.
+- VS 1.22.x latest only. New VS major versions = new mod branch, not runtime compat.
 - Standalone mod. No third-party dependencies.
 - Existing-world additive.
 - Save-file forward compat within the v1.x line. v1.x → v2.0 may break saves.

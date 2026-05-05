@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>VoxelEngine</RootNamespace>
-    <AssemblyName>VoxelEngine</AssemblyName>
+    <RootNamespace>TemporalSiege</RootNamespace>
+    <AssemblyName>TemporalSiege</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -12,9 +12,9 @@
     <VintageStoryDir Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VintageStoryDir>
     <VintageStoryDir Condition="'$(VintageStoryDir)' == ''">$(APPDATA)\Vintagestory</VintageStoryDir>
 
-    <!-- Build output goes straight into the dev-mod layout (modinfo.json + assets/ + VoxelEngine.dll). -->
+    <!-- Build output goes straight into the dev-mod layout (modinfo.json + assets/ + TemporalSiege.dll). -->
     <RepoRoot>$(MSBuildThisFileDirectory)..\</RepoRoot>
-    <ModStagingDir>$(RepoRoot)dist\dev\voxelengine\</ModStagingDir>
+    <ModStagingDir>$(RepoRoot)dist\dev\temporalsiege\</ModStagingDir>
     <OutputPath>$(ModStagingDir)</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
