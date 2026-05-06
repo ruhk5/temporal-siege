@@ -24,15 +24,15 @@ public static class RiftDebugCommands
             .RequiresPrivilege(Privilege.controlserver);
 
         root.BeginSubCommand("spawn")
-            .WithDescription("Spawn a rift at the caller's feet (no ring sampling).")
+            .WithDescription("Spawn a rift at the caller's feet, ignoring validity rules.")
             .HandleWith(args =>
             {
                 if (args.Caller.Player is not IServerPlayer player) return TextCommandResult.Error("Must be run by a player.");
                 var pos = player.Entity.Pos.AsBlockPos.UpCopy(1);
-                var rift = rifts.Placement.TrySpawnRiftAt(pos);
+                var rift = rifts.Placement.SpawnRiftAtUnchecked(pos);
                 return rift != null
                     ? TextCommandResult.Success($"Spawned rift at {pos}")
-                    : TextCommandResult.Error($"Position {pos} failed validity check (need ≥{sapi.ModLoader.GetModSystem<TemporalSiegeModSystem>().Config.Rifts.MinAirBlocksAbove} air above natural terrain).");
+                    : TextCommandResult.Error("Spawn failed (entity registry).");
             })
             .EndSubCommand();
 

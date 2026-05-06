@@ -29,6 +29,7 @@ namespace TemporalSiege.Rifts;
 public class EntityRift : Entity
 {
     private const int ParticlePillarHeight = 18;
+    private const float ParticlePillarBaseOffset = 1.0f;
     private const int ParticlesPerTick = 6;
     private const float SoundLoopIntervalSec = 4f;
 
@@ -52,6 +53,37 @@ public class EntityRift : Entity
         // "physics" behaviour, so gravity isn't applied, but other code paths
         // can nudge motion (e.g. knockback). This keeps it pinned.
         Pos.Motion.Set(0, 0, 0);
+        SelfRegister();
+    }
+
+    public override void OnEntityLoaded()
+    {
+        // Fires when a saved rift entity is rehydrated from a chunk on world
+        // load. Without this, the in-memory RiftRegistry stays empty after a
+        // save/exit/reload even though the rift entities themselves persisted,
+        // so debug commands and storm-end collapse can't find them.
+        base.OnEntityLoaded();
+        SelfRegister();
+    }
+
+    public override void OnEntityDespawn(EntityDespawnData despawn)
+    {
+        base.OnEntityDespawn(despawn);
+        SelfUnregister();
+    }
+
+    private void SelfRegister()
+    {
+        if (Api?.Side != EnumAppSide.Server) return;
+        var mod = Api.ModLoader.GetModSystem<TemporalSiegeModSystem>();
+        mod?.Rifts?.Registry.Add(this);
+    }
+
+    private void SelfUnregister()
+    {
+        if (Api?.Side != EnumAppSide.Server) return;
+        var mod = Api.ModLoader.GetModSystem<TemporalSiegeModSystem>();
+        mod?.Rifts?.Registry.Remove(this);
     }
 
     public override void OnGameTick(float dt)
@@ -85,21 +117,90 @@ public class EntityRift : Entity
         }
     }
 
+    public override bool ShouldReceiveDamage(DamageSource damageSource, float damage)
+    {
+        // Defensive override: the base implementation gates damage on flags
+        // (e.g. invulnerability) that don't apply to the rift.
+        return !IsCollapsing;
+    }
+
     public override bool ReceiveDamage(DamageSource damageSource, float damage)
     {
-        // Block damage during collapse — the rift is dying on its own timer.
         if (IsCollapsing) return false;
 
         var accepted = base.ReceiveDamage(damageSource, damage);
-        if (!accepted) return false;
-
         var health = GetBehavior<EntityBehaviorHealth>();
-        if (health != null && health.Health <= 0 && !deathHandled)
+
+        if (accepted)
+        {
+            EmitHitFeedback(damageSource);
+        }
+
+        if (accepted && health != null && health.Health <= 0 && !deathHandled)
         {
             deathHandled = true;
             HandleDeath();
         }
         return accepted;
+    }
+
+    private void EmitHitFeedback(DamageSource damageSource)
+    {
+        // Particle burst at the hit position so the player sees per-swing impact.
+        // Fall back to the rift's centre if the source didn't carry a hit pos.
+        var hp = damageSource?.HitPosition;
+        var origin = hp != null
+            ? new Vec3d(Pos.X + hp.X, Pos.Y + hp.Y, Pos.Z + hp.Z)
+            : new Vec3d(Pos.X, Pos.Y + 0.75, Pos.Z);
+
+        var minPos = new Vec3d(origin.X - 0.2, origin.Y - 0.2, origin.Z - 0.2);
+        var maxPos = new Vec3d(origin.X + 0.2, origin.Y + 0.2, origin.Z + 0.2);
+        var minVel = new Vec3f(-1.5f, -0.5f, -1.5f);
+        var maxVel = new Vec3f( 1.5f,  1.5f,  1.5f);
+        const int colorYellow = unchecked((int)0xFFFFEE40);
+
+        World.SpawnParticles(
+            quantity: 14,
+            color: colorYellow,
+            minPos: minPos,
+            maxPos: maxPos,
+            minVelocity: minVel,
+            maxVelocity: maxVel,
+            lifeLength: 0.6f,
+            gravityEffect: 0.3f,
+            scale: 0.4f,
+            model: EnumParticleModel.Quad,
+            dualCallByPlayer: null);
+
+        // Distinct hit sound — cuts through the ambient pillar loop.
+        World.PlaySoundAt(
+            new AssetLocation("game:sounds/effect/translocate-breakdimension"),
+            Pos.X, Pos.Y + 1.0, Pos.Z,
+            dualCallByPlayer: null,
+            randomizePitch: true,
+            range: 24f,
+            volume: 0.8f);
+    }
+
+    public override void OnInteract(EntityAgent byEntity, ItemSlot itemslot, Vec3d hitPosition, EnumInteractMode mode)
+    {
+        // VS dispatches player left-click melee through OnInteract(mode=Attack).
+        // The base Entity.OnInteract does nothing with this — only EntityAgent
+        // turns it into damage. Since EntityRift extends Entity (not EntityAgent),
+        // we have to translate Attack-mode interactions into damage ourselves.
+        if (mode == EnumInteractMode.Attack && Alive && !IsCollapsing && World.Side == EnumAppSide.Server)
+        {
+            var dmg = itemslot?.Itemstack?.Collectible?.AttackPower ?? 0.5f;
+            ReceiveDamage(new DamageSource
+            {
+                Source = EnumDamageSource.Player,
+                SourceEntity = byEntity,
+                HitPosition = hitPosition,
+                Type = EnumDamageType.BluntAttack,
+            }, dmg);
+            return;
+        }
+        base.OnInteract(byEntity, itemslot, hitPosition, mode);
     }
 
     /// <summary>
@@ -123,9 +224,11 @@ public class EntityRift : Entity
     private void EmitPillarParticles()
     {
         // Server broadcasts the particle to all clients in range (the IPlayer
-        // arg = null means "everyone"). The pillar is a column above the rift.
-        var minPos = new Vec3d(Pos.X - 0.4, Pos.Y, Pos.Z - 0.4);
-        var maxPos = new Vec3d(Pos.X + 0.4, Pos.Y + ParticlePillarHeight, Pos.Z + 0.4);
+        // arg = null means "everyone"). The pillar starts above the rift's
+        // body so the cube isn't drowned by the dense base of the column.
+        var pillarBase = Pos.Y + ParticlePillarBaseOffset;
+        var minPos = new Vec3d(Pos.X - 0.4, pillarBase, Pos.Z - 0.4);
+        var maxPos = new Vec3d(Pos.X + 0.4, pillarBase + ParticlePillarHeight, Pos.Z + 0.4);
         var minVel = new Vec3f(-0.05f, 0.4f, -0.05f);
         var maxVel = new Vec3f( 0.05f, 0.8f,  0.05f);
 
@@ -153,8 +256,9 @@ public class EntityRift : Entity
     {
         // Inward implosion — particles spawn at the top of the pillar and
         // converge on the rift origin. Visually distinct from the steady pillar.
-        var minPos = new Vec3d(Pos.X - 0.6, Pos.Y + ParticlePillarHeight * 0.6, Pos.Z - 0.6);
-        var maxPos = new Vec3d(Pos.X + 0.6, Pos.Y + ParticlePillarHeight * 0.9, Pos.Z + 0.6);
+        var pillarBase = Pos.Y + ParticlePillarBaseOffset;
+        var minPos = new Vec3d(Pos.X - 0.6, pillarBase + ParticlePillarHeight * 0.6, Pos.Z - 0.6);
+        var maxPos = new Vec3d(Pos.X + 0.6, pillarBase + ParticlePillarHeight * 0.9, Pos.Z + 0.6);
         var minVel = new Vec3f(-0.2f, -1.5f, -0.2f);
         var maxVel = new Vec3f( 0.2f, -0.8f,  0.2f);
         const int colorWhite = unchecked((int)0xFFFFFFE0);

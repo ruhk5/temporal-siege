@@ -79,6 +79,19 @@ public class StormSession
         EnterSubsiding();
     }
 
+    /// <summary>
+    /// Skip the straggler-cleanup wait and fully end the storm right now.
+    /// Used by /tsstorm begin when the previous session is already subsiding —
+    /// for debug we don't want a 5-minute dead window before the next storm
+    /// can fire.
+    /// </summary>
+    public void FastForwardToDone()
+    {
+        if (CurrentPhase == Phase.Done) return;
+        if (CurrentPhase != Phase.Subsiding) EnterSubsiding();
+        ExecuteDespawnSweep();
+    }
+
     private void AdvanceToNextWaveOrFinish()
     {
         if (Schedule == null || CurrentWaveIndex + 1 >= Schedule.Waves.Count)

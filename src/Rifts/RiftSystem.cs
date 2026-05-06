@@ -2,6 +2,7 @@ using TemporalSiege.Config;
 using TemporalSiege.Loot;
 using TemporalSiege.Storms;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 
@@ -66,7 +67,9 @@ public class RiftSystem
         Registry.Clear();
         // No-beacon fallback per ADR-0004: place around each player.
         // Beacon-anchored placement lands in #29 (Phase 7.5).
+        var before = Registry.Count;
         Placement.SpawnInitialRifts();
+        Announce($"opened {Registry.Count - before} initial rifts");
     }
 
     private void OnWaveEnded(StormSession session, int waveNumber)
@@ -74,17 +77,23 @@ public class RiftSystem
         // Fresh rifts open during the lull after each non-final wave. After the
         // final wave the storm enters subsiding, so we don't add more pressure.
         if (session.Schedule == null || waveNumber >= session.Schedule.Waves.Count) return;
+        var before = Registry.Count;
         Placement.SpawnFreshRifts();
+        var added = Registry.Count - before;
+        if (added > 0) Announce($"opened {added} fresh rifts during lull (now {Registry.Count} active)");
     }
 
     private void OnStormSubsiding(StormSession session)
     {
         // Begin the 30s collapse on every still-living rift. BeginStormEndCollapse
         // is idempotent — rifts already in collapse ignore the call.
+        var n = 0;
         foreach (var r in Registry.Active.ToArray())
         {
             r.BeginStormEndCollapse(StormEndCollapseSeconds);
+            n++;
         }
+        Announce($"{n} rifts beginning collapse ({StormEndCollapseSeconds:F0}s)");
     }
 
     private void OnStormFullyEnded(StormSession session)
@@ -102,6 +111,7 @@ public class RiftSystem
     {
         DropClosedRiftLoot(rift);
         Registry.Remove(rift);
+        Announce($"rift closed by player ({Registry.Count} remain)");
     }
 
     private void OnRiftCollapsedAtStormEnd(EntityRift rift)
@@ -158,5 +168,12 @@ public class RiftSystem
                 Registry.Remove(r!);
             }
         }
+    }
+
+    /// <summary>Mirror to log + chat with [Storm] prefix, same path StormCoordinator uses.</summary>
+    private void Announce(string msg)
+    {
+        sapi.Logger.Notification("[TemporalSiege] {0}", msg);
+        sapi.BroadcastMessageToAllGroups($"[Storm] {msg}", EnumChatType.Notification, null);
     }
 }

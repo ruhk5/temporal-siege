@@ -3,7 +3,9 @@
   "class": "Rift",
   "habitat": "Air",
   "hitboxSize": { "x": 1.2, "y": 2.4 },
+  "selectionBoxSize": { "x": 1.2, "y": 2.4 },
   "deadHitboxSize": { "x": 0.0, "y": 0.0 },
+  "deadSelectionBoxSize": { "x": 0.0, "y": 0.0 },
   "eyeHeight": 1.2,
   "weight": 0.0,
   "knockbackResistance": 1.0,
@@ -14,7 +16,7 @@
     "renderer": "Shape",
     "shape": { "base": "temporalsiege:entity/rift" },
     "textures": {
-      "rift": { "base": "game:block/glass-plain" }
+      "rift": { "base": "temporalsiege:item/temporalshard" }
     },
     "size": 0.9,
     "behaviors": [

@@ -171,9 +171,9 @@ public class WaveMobSpawner
         var props = sapi.World.GetEntityType(asset);
         if (props == null)
         {
-            // Stormdrifter / Sundered entities don't exist until Phase 5 / 6 —
-            // log once per missing code per wave so the log isn't spammed.
-            sapi.Logger.Debug("[TemporalSiege] wave-spawn skipped: entity {0} not registered (will land in Phase 5/6)", entityCode);
+            // Stormdrifter / Sundered entities don't exist until Phase 5 / 6.
+            // Log at notification level so the user can see the spawner trying.
+            sapi.Logger.Notification("[TemporalSiege]   spawn skipped: {0} not registered (Phase 5/6)", entityCode);
             return false;
         }
 
@@ -197,6 +197,8 @@ public class WaveMobSpawner
         entity.WatchedAttributes.SetBool(FromStormAttributeKey, true);
 
         sapi.World.SpawnEntity(entity);
+        sapi.Logger.Notification("[TemporalSiege]   spawned {0} at ({1:F0}, {2:F0}, {3:F0}) (rift {4})",
+            entityCode, spawnPos.X, spawnPos.Y, spawnPos.Z, rift.EntityId);
         return true;
     }
 }

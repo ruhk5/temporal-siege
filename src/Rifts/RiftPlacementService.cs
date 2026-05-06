@@ -88,9 +88,15 @@ public class RiftPlacementService
     }
 
     /// <summary>
-    /// Find a valid spawn slot within the ring radius and spawn a rift there.
-    /// Returns the spawned rift, or null if no valid slot was found after
-    /// <c>maxAttempts</c> tries.
+    /// Spawn a rift at <paramref name="exactPos"/> unconditionally. Used by the
+    /// /tsrift spawn debug command — validity checks belong to ring placement,
+    /// not "spawn here for testing".
+    /// </summary>
+    public EntityRift? SpawnRiftAtUnchecked(BlockPos exactPos) => SpawnRiftAt(exactPos);
+
+    /// <summary>
+    /// Spawn a rift at <paramref name="exactPos"/> only if the position passes
+    /// the air-above / natural-terrain validity check.
     /// </summary>
     public EntityRift? TrySpawnRiftAt(BlockPos exactPos)
     {
@@ -188,6 +194,7 @@ public class RiftPlacementService
 
         sapi.World.SpawnEntity(rift);
         registry.Add(rift);
+        sapi.Logger.Notification("[TemporalSiege]   rift spawned at ({0}, {1}, {2})", pos.X, pos.Y, pos.Z);
         return rift;
     }
 }

@@ -19,11 +19,21 @@ public class TemporalSiegeModSystem : ModSystem
     public override void Start(ICoreAPI api)
     {
         api.Logger.Notification("[TemporalSiege] mod loaded ({0} side)", api.Side);
-        Config = ConfigLoader.Load(api);
 
         // Custom entity classes must be registered on both sides so the client
-        // can deserialize entity sync packets coming from the server.
+        // can deserialize entity sync packets coming from the server. Must be
+        // done in Start (before AssetsLoaded) so the entity JSON can resolve
+        // its "class": "Rift" reference during asset processing.
         api.RegisterEntity("Rift", typeof(EntityRift));
+    }
+
+    public override void AssetsLoaded(ICoreAPI api)
+    {
+        // Asset reads must happen at AssetsLoaded or later. Loading in Start
+        // fails on the client with a "Mods must not get assets before AssetsLoaded"
+        // exception, which previously slipped through because nothing in
+        // Phase 0–3 tripped a client-side codepath.
+        Config = ConfigLoader.Load(api);
     }
 
     public override void StartServerSide(ICoreServerAPI sapi)
