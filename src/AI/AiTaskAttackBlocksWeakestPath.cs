@@ -51,6 +51,7 @@ public class AiTaskAttackBlocksWeakestPath : AiTaskBaseTargetable
 
     public override bool ShouldExecute()
     {
+        if (StormGate.IsClosedFor(entity)) return false;
         if (targetEntity == null || !targetEntity.Alive) return false;
         EnsureDamageStore();
         // Never crash a mob if the damage system isn't present (e.g., misconfig); just skip.

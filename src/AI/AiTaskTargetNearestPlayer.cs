@@ -38,6 +38,8 @@ public class AiTaskTargetNearestPlayer : AiTaskBaseTargetable
 
     public override bool ShouldExecute()
     {
+        if (StormGate.IsClosedFor(entity)) return false;
+
         var now = entity.World.ElapsedMilliseconds;
         if (now - lastScanMs < scanIntervalMs)
             return IsTargetValid(targetEntity);

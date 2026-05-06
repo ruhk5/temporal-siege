@@ -57,6 +57,7 @@ public class AiTaskChargeAtTarget : AiTaskBaseTargetable
 
     public override bool ShouldExecute()
     {
+        if (StormGate.IsClosedFor(entity)) return false;
         return targetEntity != null && targetEntity.Alive;
     }
 

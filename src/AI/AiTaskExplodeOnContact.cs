@@ -45,6 +45,7 @@ public class AiTaskExplodeOnContact : AiTaskBaseTargetable
     public override bool ShouldExecute()
     {
         if (armed) return true;
+        if (StormGate.IsClosedFor(entity)) return false;
         if (targetEntity == null || !targetEntity.Alive) return false;
         return DistanceToTargetSquared() <= contactRange * contactRange;
     }

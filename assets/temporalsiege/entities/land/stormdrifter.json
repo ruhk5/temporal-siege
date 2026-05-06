@@ -1,0 +1,131 @@
+{
+  "code": "stormdrifter",
+  "class": "EntityDrifter",
+  "variantgroups": [
+    { "code": "type", "states": ["locust", "surface", "deep", "tainted", "corrupt", "nightmare"] }
+  ],
+  "weight": 140,
+  "canClimb": true,
+  "hitboxSize": { "x": 0.6, "y": 1.3 },
+  "deadHitboxSize": { "x": 0.6, "y": 1 },
+  "eyeHeight": 1.3,
+  "attributes": {
+    "allowInDevastationArea": true,
+    "killedByInfoText": "deadcreature-vile",
+    "glitchAffected": true,
+    "glitchFlicker": true,
+    "reckless": true
+  },
+  "drops": [
+    {
+      "type": "item",
+      "code": "temporalsiege:temporalshard",
+      "quantity": { "avg": 1, "var": 1 }
+    }
+  ],
+  "client": {
+    "renderer": "Shape",
+    "pitchStep": false,
+    "shapeByType": {
+      "*-locust":    { "base": "game:entity/lore/drifter/surface" },
+      "*-surface":   { "base": "game:entity/lore/drifter/surface" },
+      "*-deep":      { "base": "game:entity/lore/drifter/surface" },
+      "*-tainted":   { "base": "game:entity/lore/drifter/spiked1" },
+      "*-corrupt":   { "base": "game:entity/lore/drifter/deerhorn" },
+      "*-nightmare": { "base": "game:entity/lore/drifter/knife" }
+    },
+    "texturesByType": {
+      "*-locust":    { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-surface":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-deep":      { "skin": { "base": "game:entity/lore/drifter/deep1" } },
+      "*-tainted":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-corrupt":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-nightmare": { "skin": { "base": "game:entity/lore/drifter/surface1" } }
+    },
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      { "code": "interpolateposition" }
+    ],
+    "animations": [
+      { "code": "hurt", "animation": "standhurt", "animationSpeed": 2, "weight": 10, "blendMode": "AddAverage" },
+      { "code": "die", "animation": "standdie", "animationSpeed": 0.7, "weight": 10, "blendMode": "Average", "triggeredBy": { "onControls": ["dead"] } },
+      { "code": "idle", "animation": "standidle", "blendMode": "Average", "triggeredBy": { "defaultAnim": true } },
+      { "code": "standwalk", "animation": "standwalk", "blendMode": "Average" },
+      { "code": "standrun", "animation": "standrun", "blendMode": "Average" }
+    ]
+  },
+  "server": {
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      {
+        "code": "health",
+        "currenthealthByType": {
+          "*-locust": 8,
+          "*-surface": 14,
+          "*-deep": 20,
+          "*-tainted": 28,
+          "*-corrupt": 38,
+          "*-nightmare": 50
+        },
+        "maxhealthByType": {
+          "*-locust": 8,
+          "*-surface": 14,
+          "*-deep": 20,
+          "*-tainted": 28,
+          "*-corrupt": 38,
+          "*-nightmare": 50
+        }
+      },
+      { "code": "deaddecay", "hoursToDecay": 3 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      {
+        "code": "taskai",
+        "aitasks": [
+          {
+            "code": "temporalsiege:targetnearestplayer",
+            "priority": 2,
+            "range": 32,
+            "switchThreshold": 4,
+            "scanIntervalMs": 500
+          },
+          {
+            "code": "temporalsiege:attackblocksweakestpath",
+            "priority": 1.5,
+            "damagePerAttack": 2,
+            "attackRate": 1.2,
+            "maxPathLength": 96,
+            "repathIntervalSec": 2
+          },
+          {
+            "code": "temporalsiege:meleeattack",
+            "priority": 1,
+            "entityCodes": ["player"],
+            "damageByType": {
+              "*-locust": 1.5,
+              "*-surface": 2.5,
+              "*-deep": 4,
+              "*-tainted": 5,
+              "*-corrupt": 6,
+              "*-nightmare": 8
+            },
+            "damageTier": 0,
+            "damageType": "BluntAttack",
+            "slot": 0,
+            "minDist": 1.5,
+            "attackDurationMs": 800,
+            "animation": "hurt"
+          }
+        ]
+      }
+    ]
+  },
+  "sounds": {
+    "hurt": "game:creature/drifter-hurt",
+    "death": "game:creature/drifter-death",
+    "idle": "game:creature/drifter-idle1"
+  },
+  "idleSoundChance": 0.05
+}
