@@ -24,7 +24,9 @@ public class TemporalSiegeModSystem : ModSystem
         BlockDamageDebugCommands.Register(sapi, BlockDamage);
 
         // AI behavior library (ADR-0005). AI runs server-side only in v1.
+        // Fully-qualify our AiTaskMeleeAttack to disambiguate from vanilla VS's same-named class.
         AiTaskRegistry.Register<AiTaskTargetNearestPlayer>("temporalsiege:targetnearestplayer");
+        AiTaskRegistry.Register<TemporalSiege.AI.AiTaskMeleeAttack>("temporalsiege:meleeattack");
     }
 
     public override void AssetsFinalize(ICoreAPI api)
