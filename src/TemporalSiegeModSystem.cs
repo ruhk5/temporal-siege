@@ -29,6 +29,7 @@ public class TemporalSiegeModSystem : ModSystem
         AiTaskRegistry.Register<TemporalSiege.AI.AiTaskMeleeAttack>("temporalsiege:meleeattack");
         AiTaskRegistry.Register<AiTaskExplodeOnContact>("temporalsiege:explodeoncontact");
         AiTaskRegistry.Register<AiTaskChargeAtTarget>("temporalsiege:chargeattarget");
+        AiTaskRegistry.Register<AiTaskAttackBlocksWeakestPath>("temporalsiege:attackblocksweakestpath");
     }
 
     public override void AssetsFinalize(ICoreAPI api)
