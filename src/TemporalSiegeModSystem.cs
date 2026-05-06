@@ -1,6 +1,7 @@
 using TemporalSiege.AI;
 using TemporalSiege.Config;
 using TemporalSiege.Damage;
+using TemporalSiege.Storms;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -11,6 +12,7 @@ public class TemporalSiegeModSystem : ModSystem
 {
     public TemporalSiegeConfig Config { get; private set; } = new();
     public BlockDamageStore? BlockDamage { get; private set; }
+    public StormCoordinator? Storms { get; private set; }
 
     public override void Start(ICoreAPI api)
     {
@@ -30,6 +32,10 @@ public class TemporalSiegeModSystem : ModSystem
         AiTaskRegistry.Register<AiTaskExplodeOnContact>("temporalsiege:explodeoncontact");
         AiTaskRegistry.Register<AiTaskChargeAtTarget>("temporalsiege:chargeattarget");
         AiTaskRegistry.Register<AiTaskAttackBlocksWeakestPath>("temporalsiege:attackblocksweakestpath");
+
+        // Storm event loop (Phase 3).
+        Storms = new StormCoordinator(sapi, Config);
+        StormDebugCommands.Register(sapi, Storms);
     }
 
     public override void AssetsFinalize(ICoreAPI api)
