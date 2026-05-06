@@ -27,6 +27,7 @@ public class TemporalSiegeModSystem : ModSystem
         // Fully-qualify our AiTaskMeleeAttack to disambiguate from vanilla VS's same-named class.
         AiTaskRegistry.Register<AiTaskTargetNearestPlayer>("temporalsiege:targetnearestplayer");
         AiTaskRegistry.Register<TemporalSiege.AI.AiTaskMeleeAttack>("temporalsiege:meleeattack");
+        AiTaskRegistry.Register<AiTaskExplodeOnContact>("temporalsiege:explodeoncontact");
     }
 
     public override void AssetsFinalize(ICoreAPI api)
