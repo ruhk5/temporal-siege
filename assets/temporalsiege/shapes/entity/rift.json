@@ -1,0 +1,21 @@
+{
+  "textureWidth": 16,
+  "textureHeight": 16,
+  "textureSizes": { "rift": [16, 16] },
+  "elements": [
+    {
+      "name": "core",
+      "from": [-3, 0, -3],
+      "to": [3, 6, 3],
+      "rotationOrigin": [0, 3, 0],
+      "faces": {
+        "north": { "texture": "#rift", "uv": [0, 0, 6, 6] },
+        "east":  { "texture": "#rift", "uv": [0, 0, 6, 6] },
+        "south": { "texture": "#rift", "uv": [0, 0, 6, 6] },
+        "west":  { "texture": "#rift", "uv": [0, 0, 6, 6] },
+        "up":    { "texture": "#rift", "uv": [0, 0, 6, 6] },
+        "down":  { "texture": "#rift", "uv": [0, 0, 6, 6] }
+      }
+    }
+  ]
+}

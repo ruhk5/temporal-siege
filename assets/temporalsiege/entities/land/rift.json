@@ -1,0 +1,31 @@
+{
+  "code": "rift",
+  "class": "Rift",
+  "habitat": "Air",
+  "hitboxSize": { "x": 1.2, "y": 2.4 },
+  "deadHitboxSize": { "x": 0.0, "y": 0.0 },
+  "eyeHeight": 1.2,
+  "weight": 0.0,
+  "knockbackResistance": 1.0,
+  "fallDamage": false,
+  "canClimb": false,
+  "drops": [],
+  "client": {
+    "renderer": "Shape",
+    "shape": { "base": "temporalsiege:entity/rift" },
+    "textures": {
+      "rift": { "base": "game:block/glass-plain" }
+    },
+    "size": 0.9,
+    "behaviors": [
+      { "code": "interpolateposition" }
+    ]
+  },
+  "server": {
+    "behaviors": [
+      { "code": "health", "currenthealth": 600, "maxhealth": 600 }
+    ],
+    "attributes": {}
+  },
+  "sounds": {}
+}
