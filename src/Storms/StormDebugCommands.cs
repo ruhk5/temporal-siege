@@ -24,7 +24,8 @@ public static class StormDebugCommands
                 var intensity = (string?)args[0];
                 if (intensity != null && intensity != "minor" && intensity != "moderate" && intensity != "major")
                     return TextCommandResult.Error("intensity must be minor / moderate / major");
-                coordinator.ForceBeginStorm(intensity);
+                var reason = coordinator.ForceBeginStorm(intensity);
+                if (reason != null) return TextCommandResult.Error(reason);
                 return TextCommandResult.Success($"Storm forced to begin (intensity={intensity ?? "auto"}).");
             })
             .EndSubCommand();
@@ -36,6 +37,15 @@ public static class StormDebugCommands
                 if (coordinator.ActiveSession == null) return TextCommandResult.Error("No active storm.");
                 coordinator.ForceEndStorm();
                 return TextCommandResult.Success("Storm forced into subsiding.");
+            })
+            .EndSubCommand();
+
+        root.BeginSubCommand("finish")
+            .WithDescription("Skip the straggler wait and finish the storm immediately.")
+            .HandleWith(args =>
+            {
+                if (!coordinator.ForceFinishStorm()) return TextCommandResult.Error("No active storm to finish.");
+                return TextCommandResult.Success("Straggler phase skipped, storm fully ended.");
             })
             .EndSubCommand();
 
