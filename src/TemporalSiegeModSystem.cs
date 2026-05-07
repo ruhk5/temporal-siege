@@ -57,6 +57,9 @@ public class TemporalSiegeModSystem : ModSystem
         // Rift lifecycle (Phase 4).
         Rifts = new RiftSystem(sapi, Config, Storms);
         RiftDebugCommands.Register(sapi, Rifts);
+
+        // Sundered debug commands (Phase 6).
+        SunderedDebugCommands.Register(sapi);
     }
 
     public override void AssetsFinalize(ICoreAPI api)
@@ -87,5 +90,12 @@ public class TemporalSiegeModSystem : ModSystem
             else
                 api.Logger.Notification("[TemporalSiege] entity registered: {0} (class={1})", t.Code, t.Class);
         }
+
+        // The Sundered (Phase 6).
+        var sundered = api.World.GetEntityType(new AssetLocation("temporalsiege", "sundered"));
+        if (sundered == null)
+            api.Logger.Warning("[TemporalSiege] entity temporalsiege:sundered did not register");
+        else
+            api.Logger.Notification("[TemporalSiege] entity registered: {0} (class={1})", sundered.Code, sundered.Class);
     }
 }

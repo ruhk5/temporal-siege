@@ -134,7 +134,7 @@
             "maxcooldown": 1750,
             "damagePlayerAtMs": 400,
             "attackDurationMs": 1000,
-            "animation": "standhurt",
+            "animation": "standattack",
             "animationSpeed": 1.5,
             "sound": "game:creature/drifter-hit",
             "soundStartMs": 400

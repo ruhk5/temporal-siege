@@ -1,0 +1,149 @@
+{
+  "code": "sundered",
+  "class": "EntityDrifter",
+  "tags": ["rust-creature", "habitat-land"],
+  "weight": 1200,
+  "canClimb": false,
+  "hitboxSize": { "x": 1.0, "y": 2.0 },
+  "deadHitboxSize": { "x": 1.2, "y": 1.0 },
+  "eyeHeight": 1.8,
+  "knockbackResistance": 0.85,
+  "attributes": {
+    "allowInDevastationArea": true,
+    "killedByInfoText": "deadcreature-sundered",
+    "glitchAffected": true,
+    "glitchFlicker": true,
+    "reckless": true,
+    "extraSplashParticlesMul": 6,
+    "spawnCloserDuringLowStability": false,
+    "oddsToAlter": 99999,
+    "dieAnimationCode": "die",
+    "alternativeDieAnimationCode": "crawldie",
+    "idleAnimationCode": "idle",
+    "alternativeIdleAnimationCode": "crawlidle",
+    "alternativeCollisionBox": [1.4, 0.7],
+    "alternativeCanClimb": false,
+    "animationsRemapping": {
+      "idle": "crawlidle",
+      "standwalk": "crawlwalk",
+      "standlowwalk": "crawlwalk",
+      "standrun": "crawlrun",
+      "standidle": "crawlidle",
+      "standdespair": "crawlemote",
+      "standcry": "crawlemote",
+      "standhurt": "crawlhurt",
+      "standdie": "crawldie"
+    }
+  },
+  "drops": [],
+  "client": {
+    "renderer": "Shape",
+    "pitchStep": false,
+    "shape": { "base": "game:entity/lore/drifter/knife" },
+    "textures": {
+      "skin": { "base": "game:entity/lore/drifter/surface1" }
+    },
+    "size": 1.6,
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      { "code": "interpolateposition" },
+      { "code": "harvestable", "duration": 4 }
+    ],
+    "animations": [
+      { "code": "hurt", "animation": "standhurt", "animationSpeed": 1.5, "weight": 10, "blendMode": "AddAverage" },
+      { "code": "die", "animation": "standdie", "animationSpeed": 0.5, "weight": 10, "blendMode": "Average", "triggeredBy": { "onControls": ["dead"] } },
+      { "code": "idle", "animation": "standidle", "blendMode": "Average", "triggeredBy": { "defaultAnim": true } },
+      { "code": "crawlhurt", "animation": "crawlhurt", "animationSpeed": 1.5, "weight": 10, "blendMode": "AddAverage" },
+      { "code": "crawldie", "animation": "crawldie", "animationSpeed": 0.5, "weight": 10, "blendMode": "Average", "triggeredBy": { "onControls": ["dead"] } },
+      { "code": "crawlidle", "animation": "crawlidle", "blendMode": "Average", "weight": 0.1, "easeoutSpeed": 10 },
+      { "code": "standwalk", "animation": "standwalk", "blendMode": "Average" },
+      { "code": "standrun", "animation": "standrun", "blendMode": "Average" },
+      { "code": "crawlwalk", "animation": "crawlwalk", "blendMode": "Average" },
+      { "code": "crawlrun", "animation": "crawlrun", "blendMode": "Average" },
+      { "code": "crawlemote", "animation": "crawlemote" }
+    ]
+  },
+  "server": {
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      { "code": "health", "currenthealth": 150, "maxhealth": 150 },
+      { "code": "deaddecay", "hoursToDecay": 6 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      {
+        "code": "emotionstates",
+        "states": [
+          { "code": "aggressiveondamage", "duration": 600, "chance": 1, "slot": 0, "priority": 0.5, "accumType": "noaccum" }
+        ]
+      },
+      { "code": "nametag", "selectFromRandomName": ["Sundered"], "showtagonlywhentargeted": false, "renderRange": 64 },
+      {
+        "code": "taskai",
+        "aitasks": [
+          {
+            "code": "meleeattack",
+            "entityCodes": ["player"],
+            "priority": 2,
+            "creatureHostility": "aggressive",
+            "damage": 12,
+            "damageTier": 2,
+            "damageType": "BluntAttack",
+            "mincooldown": 1200,
+            "maxcooldown": 2200,
+            "damagePlayerAtMs": 600,
+            "attackDurationMs": 1500,
+            "animation": "standattack",
+            "animationSpeed": 1.0,
+            "sound": "game:creature/drifter-hit",
+            "soundStartMs": 600
+          },
+          {
+            "code": "seekentity",
+            "entityCodes": ["player"],
+            "priority": 1.5,
+            "creatureHostility": "aggressive",
+            "mincooldown": 600,
+            "maxcooldown": 1200,
+            "movespeed": 0.012,
+            "seekingRange": 24,
+            "belowTempSeekingRange": 36,
+            "belowTempThreshold": 1,
+            "animationSpeed": 0.9,
+            "animation": "standrun",
+            "sound": "game:creature/drifter-aggro"
+          },
+          {
+            "code": "temporalsiege:hordepursue",
+            "priority": 1.4,
+            "scanRange": 256,
+            "moveSpeed": 0.012,
+            "damagePerAttack": 4,
+            "attackRate": 0.8,
+            "renavIntervalSec": 2.5,
+            "animation": "standwalk",
+            "animationSpeed": 0.9
+          },
+          { "code": "lookaround", "priority": 0.5 }
+        ]
+      },
+      {
+        "code": "harvestable",
+        "duration": 4,
+        "fixedweight": true,
+        "drops": [
+          { "type": "item", "code": "temporalsiege:aberrantcore", "quantity": { "avg": 1, "var": 0 } },
+          { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 4, "var": 1.5 } }
+        ]
+      },
+      { "code": "ripharvestable" },
+      { "code": "entitystatetags" }
+    ]
+  },
+  "sounds": {
+    "hurt": "game:creature/drifter-hurt",
+    "death": "game:creature/drifter-death",
+    "idle": { "path": "game:creature/drifter-idle", "range": 24, "pitch": { "avg": 0.6, "var": 0.1 } }
+  }
+}
