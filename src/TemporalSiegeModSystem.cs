@@ -48,6 +48,7 @@ public class TemporalSiegeModSystem : ModSystem
         AiTaskRegistry.Register<AiTaskExplodeOnContact>("temporalsiege:explodeoncontact");
         AiTaskRegistry.Register<AiTaskChargeAtTarget>("temporalsiege:chargeattarget");
         AiTaskRegistry.Register<AiTaskAttackBlocksWeakestPath>("temporalsiege:attackblocksweakestpath");
+        AiTaskRegistry.Register<AiTaskHordePursue>("temporalsiege:hordepursue");
 
         // Storm event loop (Phase 3).
         Storms = new StormCoordinator(sapi, Config);
@@ -75,5 +76,16 @@ public class TemporalSiegeModSystem : ModSystem
             api.Logger.Warning("[TemporalSiege] entity temporalsiege:rift did not register");
         else
             api.Logger.Notification("[TemporalSiege] entity registered: {0} (class={1})", riftType.Code, riftType.Class);
+
+        // Stormdrifter variants (Phase 5).
+        foreach (var tier in new[] { "locust", "surface", "deep", "tainted", "corrupt", "nightmare" })
+        {
+            var code = new AssetLocation("temporalsiege", $"stormdrifter-{tier}");
+            var t = api.World.GetEntityType(code);
+            if (t == null)
+                api.Logger.Warning("[TemporalSiege] entity {0} did not register", code);
+            else
+                api.Logger.Notification("[TemporalSiege] entity registered: {0} (class={1})", t.Code, t.Class);
+        }
     }
 }

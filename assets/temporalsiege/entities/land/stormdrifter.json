@@ -1,0 +1,208 @@
+{
+  "code": "stormdrifter",
+  "class": "EntityDrifter",
+  "tags": ["rust-creature", "habitat-land"],
+  "variantgroups": [
+    { "code": "type", "states": ["locust", "surface", "deep", "tainted", "corrupt", "nightmare"] }
+  ],
+  "weight": 140,
+  "canClimb": true,
+  "hitboxSize": { "x": 0.6, "y": 1.3 },
+  "deadHitboxSize": { "x": 0.6, "y": 1 },
+  "eyeHeight": 1.3,
+  "attributes": {
+    "allowInDevastationArea": true,
+    "killedByInfoText": "deadcreature-stormdrifter",
+    "glitchAffected": true,
+    "glitchFlicker": true,
+    "reckless": true,
+    "extraSplashParticlesMul": 4,
+    "spawnCloserDuringLowStability": false,
+    "oddsToAlter": 99999,
+    "dieAnimationCode": "die",
+    "alternativeDieAnimationCode": "crawldie",
+    "idleAnimationCode": "idle",
+    "alternativeIdleAnimationCode": "crawlidle",
+    "alternativeCollisionBox": [0.9, 0.6],
+    "alternativeCanClimb": false,
+    "animationsRemapping": {
+      "idle": "crawlidle",
+      "standwalk": "crawlwalk",
+      "standlowwalk": "crawlwalk",
+      "standrun": "crawlrun",
+      "standidle": "crawlidle",
+      "standdespair": "crawlemote",
+      "standcry": "crawlemote",
+      "standhurt": "crawlhurt",
+      "standdie": "crawldie"
+    }
+  },
+  "drops": [],
+  "client": {
+    "renderer": "Shape",
+    "pitchStep": false,
+    "shapeByType": {
+      "*-locust":    { "base": "game:entity/lore/drifter/surface" },
+      "*-surface":   { "base": "game:entity/lore/drifter/surface" },
+      "*-deep":      { "base": "game:entity/lore/drifter/surface" },
+      "*-tainted":   { "base": "game:entity/lore/drifter/spiked1" },
+      "*-corrupt":   { "base": "game:entity/lore/drifter/deerhorn" },
+      "*-nightmare": { "base": "game:entity/lore/drifter/knife" }
+    },
+    "texturesByType": {
+      "*-locust":    { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-surface":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-deep":      { "skin": { "base": "game:entity/lore/drifter/deep1" } },
+      "*-tainted":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-corrupt":   { "skin": { "base": "game:entity/lore/drifter/surface1" } },
+      "*-nightmare": { "skin": { "base": "game:entity/lore/drifter/surface1" } }
+    },
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      { "code": "interpolateposition" },
+      { "code": "harvestable", "duration": 2 }
+    ],
+    "animations": [
+      { "code": "hurt", "animation": "standhurt", "animationSpeed": 2, "weight": 10, "blendMode": "AddAverage" },
+      { "code": "die", "animation": "standdie", "animationSpeed": 0.7, "weight": 10, "blendMode": "Average", "triggeredBy": { "onControls": ["dead"] } },
+      { "code": "idle", "animation": "standidle", "blendMode": "Average", "triggeredBy": { "defaultAnim": true } },
+      { "code": "crawlhurt", "animation": "crawlhurt", "animationSpeed": 2, "weight": 10, "blendMode": "AddAverage" },
+      { "code": "crawldie", "animation": "crawldie", "animationSpeed": 0.7, "weight": 10, "blendMode": "Average", "triggeredBy": { "onControls": ["dead"] } },
+      { "code": "crawlidle", "animation": "crawlidle", "blendMode": "Average", "weight": 0.1, "easeoutSpeed": 10 },
+      { "code": "standwalk", "animation": "standwalk", "blendMode": "Average" },
+      { "code": "standrun", "animation": "standrun", "blendMode": "Average" },
+      { "code": "crawlwalk", "animation": "crawlwalk", "blendMode": "Average" },
+      { "code": "crawlrun", "animation": "crawlrun", "blendMode": "Average" },
+      { "code": "crawlemote", "animation": "crawlemote" }
+    ]
+  },
+  "server": {
+    "behaviors": [
+      { "code": "repulseagents" },
+      { "code": "controlledphysics", "stepHeight": 1.1251 },
+      {
+        "code": "health",
+        "currenthealthByType": {
+          "*-locust": 8,
+          "*-surface": 14,
+          "*-deep": 20,
+          "*-tainted": 28,
+          "*-corrupt": 38,
+          "*-nightmare": 50
+        },
+        "maxhealthByType": {
+          "*-locust": 8,
+          "*-surface": 14,
+          "*-deep": 20,
+          "*-tainted": 28,
+          "*-corrupt": 38,
+          "*-nightmare": 50
+        }
+      },
+      { "code": "deaddecay", "hoursToDecay": 3 },
+      { "code": "floatupwhenstuck", "onlyWhenDead": true },
+      { "code": "despawn", "minPlayerDistance": 32, "minSeconds": 30 },
+      { "code": "despawn", "minPlayerDistance": 64, "minSeconds": 6 },
+      {
+        "code": "emotionstates",
+        "states": [
+          { "code": "fleeondamage", "duration": 10, "chance": 0.05, "slot": 0, "priority": 1, "accumType": "max" },
+          { "code": "aggressiveondamage", "duration": 30, "chance": 1, "slot": 0, "priority": 0.5, "accumType": "noaccum" }
+        ]
+      },
+      {
+        "code": "taskai",
+        "aitasks": [
+          {
+            "code": "meleeattack",
+            "entityCodes": ["player"],
+            "priority": 2,
+            "creatureHostility": "aggressive",
+            "damageByType": {
+              "*-locust": 1.5,
+              "*-surface": 2.5,
+              "*-deep": 4,
+              "*-tainted": 5,
+              "*-corrupt": 6,
+              "*-nightmare": 8
+            },
+            "damageTier": 0,
+            "damageType": "BluntAttack",
+            "mincooldown": 500,
+            "maxcooldown": 1750,
+            "damagePlayerAtMs": 400,
+            "attackDurationMs": 1000,
+            "animation": "standhurt",
+            "animationSpeed": 1.5,
+            "sound": "game:creature/drifter-hit",
+            "soundStartMs": 400
+          },
+          {
+            "code": "seekentity",
+            "entityCodes": ["player"],
+            "priority": 1.5,
+            "creatureHostility": "aggressive",
+            "mincooldown": 400,
+            "maxcooldown": 800,
+            "movespeed": 0.018,
+            "seekingRange": 20,
+            "belowTempSeekingRange": 30,
+            "belowTempThreshold": 1,
+            "animationSpeed": 1.3,
+            "animation": "standrun",
+            "sound": "game:creature/drifter-aggro"
+          },
+          {
+            "code": "temporalsiege:hordepursue",
+            "priority": 1.4,
+            "scanRange": 256,
+            "moveSpeed": 0.022,
+            "damagePerAttack": 2,
+            "attackRate": 1.2,
+            "renavIntervalSec": 2,
+            "animation": "standwalk",
+            "animationSpeed": 1.2
+          },
+          {
+            "code": "wander",
+            "priority": 1.0,
+            "movespeed": 0.01,
+            "animationSpeed": 1.2,
+            "animation": "standwalk",
+            "preferredLightLevel": 15
+          },
+          {
+            "code": "getoutofwater",
+            "priority": 1.4,
+            "movespeed": 0.015,
+            "animation": "standwalk",
+            "animationSpeed": 1.55
+          },
+          { "code": "lookaround", "priority": 0.5 }
+        ]
+      },
+      {
+        "code": "harvestable",
+        "duration": 2,
+        "fixedweight": true,
+        "dropsByType": {
+          "*-locust":    [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 0.5, "var": 0.5 } } ],
+          "*-surface":   [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 1.0, "var": 0.5 } } ],
+          "*-deep":      [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 1.5, "var": 0.5 } } ],
+          "*-tainted":   [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 2.0, "var": 0.5 } } ],
+          "*-corrupt":   [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 2.5, "var": 0.5 } } ],
+          "*-nightmare": [ { "type": "item", "code": "temporalsiege:temporalshard", "quantity": { "avg": 3.0, "var": 0.5 } } ]
+        }
+      },
+      { "code": "ripharvestable" },
+      { "code": "entitystatetags" }
+    ]
+  },
+  "sounds": {
+    "hurt": "game:creature/drifter-hurt",
+    "death": "game:creature/drifter-death",
+    "idle": { "path": "game:creature/drifter-idle", "range": 14, "pitch": { "avg": 1, "var": 0.25 } }
+  }
+}

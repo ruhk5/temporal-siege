@@ -60,6 +60,18 @@ internal static class WeakestPathFinder
                 var stepCost = StepCost(ba, nb, hardnessBias);
                 if (float.IsPositiveInfinity(stepCost)) continue;
 
+                // Drifters can't fly. A pure-vertical step UP into an air cell
+                // (same X,Z, Y+1) requires either a jump or something to climb,
+                // neither of which we model. Skip these so A* prefers
+                // break-through-wall paths over flying-up-into-the-sky paths.
+                // Skybase exploit (ADR-0003) is tolerated in v1: if no
+                // horizontal path exists, A* fails and drifters give up.
+                if (off.Y > 0 && off.X == 0 && off.Z == 0)
+                {
+                    var nbBlock = ba.GetBlock(nb);
+                    if (nbBlock != null && nbBlock.Id == 0) continue;
+                }
+
                 var tentative = currentG + stepCost;
                 if (gScore.TryGetValue(nb, out var existing) && tentative >= existing) continue;
 

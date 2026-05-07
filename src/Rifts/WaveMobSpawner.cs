@@ -197,8 +197,29 @@ public class WaveMobSpawner
         entity.WatchedAttributes.SetBool(FromStormAttributeKey, true);
 
         sapi.World.SpawnEntity(entity);
-        sapi.Logger.Notification("[TemporalSiege]   spawned {0} at ({1:F0}, {2:F0}, {3:F0}) (rift {4})",
-            entityCode, spawnPos.X, spawnPos.Y, spawnPos.Z, rift.EntityId);
+        sapi.Logger.Notification("[TemporalSiege]   spawned {0} at ({1:F0}, {2:F0}, {3:F0}) (rift {4}, eid {5})",
+            entityCode, spawnPos.X, spawnPos.Y, spawnPos.Z, rift.EntityId, entity.EntityId);
+
+        // Diagnostic: dump the entity's behavior list and (if taskai is present) its task list.
+        // Helps surface whether vanilla taskai accepted our task codes.
+        if (entity is Vintagestory.API.Common.EntityAgent agent)
+        {
+            var taskAi = agent.GetBehavior<Vintagestory.GameContent.EntityBehaviorTaskAI>();
+            if (taskAi != null)
+            {
+                var tasks = taskAi.TaskManager?.AllTasks;
+                var taskNames = tasks != null ? string.Join(",", tasks.Select(t => t.GetType().Name)) : "(null)";
+                sapi.Logger.Notification("[TemporalSiege]     taskai tasks: [{0}]", taskNames);
+            }
+            else
+            {
+                sapi.Logger.Notification("[TemporalSiege]     taskai behavior NOT found on entity");
+            }
+        }
+        else
+        {
+            sapi.Logger.Notification("[TemporalSiege]     entity is NOT EntityAgent (type={0}) — taskai will not run", entity?.GetType().Name);
+        }
         return true;
     }
 }
