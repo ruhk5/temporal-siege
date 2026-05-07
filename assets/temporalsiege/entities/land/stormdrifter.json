@@ -116,7 +116,7 @@
         "code": "taskai",
         "aitasks": [
           {
-            "code": "meleeattack",
+            "code": "temporalsiege:meleeattack",
             "entityCodes": ["player"],
             "priority": 2,
             "creatureHostility": "aggressive",
