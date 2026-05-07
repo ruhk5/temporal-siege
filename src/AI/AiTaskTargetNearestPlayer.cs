@@ -34,11 +34,20 @@ public class AiTaskTargetNearestPlayer : AiTaskBaseTargetable
         range           = taskConfig["range"].AsFloat(24f);
         switchThreshold = taskConfig["switchThreshold"].AsFloat(4f);
         scanIntervalMs  = taskConfig["scanIntervalMs"].AsFloat(500f);
+        entity.World.Logger.Notification("[TemporalSiege] AiTaskTargetNearestPlayer instantiated for {0} (range={1})", entity.Code, range);
     }
 
+    private int sePoll;
     public override bool ShouldExecute()
     {
-        if (StormGate.IsClosedFor(entity)) return false;
+        sePoll++;
+        if (sePoll <= 3) entity.World.Logger.Notification("[TemporalSiege] TargetNearestPlayer.ShouldExecute call#{0} on {1}", sePoll, entity.EntityId);
+
+        if (StormGate.IsClosedFor(entity))
+        {
+            if (sePoll <= 3) entity.World.Logger.Notification("[TemporalSiege]   gated off");
+            return false;
+        }
 
         var now = entity.World.ElapsedMilliseconds;
         if (now - lastScanMs < scanIntervalMs)
@@ -46,6 +55,7 @@ public class AiTaskTargetNearestPlayer : AiTaskBaseTargetable
 
         lastScanMs = now;
         PickTarget();
+        if (sePoll <= 3) entity.World.Logger.Notification("[TemporalSiege]   picked target = {0}", targetEntity?.EntityId);
         return targetEntity != null;
     }
 

@@ -48,6 +48,7 @@ public class TemporalSiegeModSystem : ModSystem
         AiTaskRegistry.Register<AiTaskExplodeOnContact>("temporalsiege:explodeoncontact");
         AiTaskRegistry.Register<AiTaskChargeAtTarget>("temporalsiege:chargeattarget");
         AiTaskRegistry.Register<AiTaskAttackBlocksWeakestPath>("temporalsiege:attackblocksweakestpath");
+        AiTaskRegistry.Register<AiTaskHordePursue>("temporalsiege:hordepursue");
 
         // Storm event loop (Phase 3).
         Storms = new StormCoordinator(sapi, Config);

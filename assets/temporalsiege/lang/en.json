@@ -2,5 +2,14 @@
   "item-temporalshard": "Temporal Shard",
   "item-temporalshard-desc": "A shimmering shard of unstable temporal energy. Drops from stormdrifters, closed rifts, and at storm-end. Used in T2 defense crafting and as fuel for the repair hammer.",
   "item-aberrantcore": "Aberrant Core",
-  "item-aberrantcore-desc": "A pulsing core of corrupted temporal matter. Pried from the Sundered. Required for T3 defense crafting."
+  "item-aberrantcore-desc": "A pulsing core of corrupted temporal matter. Pried from the Sundered. Required for T3 defense crafting.",
+
+  "deadcreature-stormdrifter": "a stormdrifter",
+
+  "item-creature-stormdrifter-locust": "Locust Stormdrifter",
+  "item-creature-stormdrifter-surface": "Surface Stormdrifter",
+  "item-creature-stormdrifter-deep": "Deep Stormdrifter",
+  "item-creature-stormdrifter-tainted": "Tainted Stormdrifter",
+  "item-creature-stormdrifter-corrupt": "Corrupt Stormdrifter",
+  "item-creature-stormdrifter-nightmare": "Nightmare Stormdrifter"
 }
